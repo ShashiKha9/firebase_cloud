@@ -22,7 +22,6 @@ class MessageScreenState extends State<MessageScreen>{
   final messageController = new TextEditingController();
   final _formkey = GlobalKey<FormState>();
   final dbRef = FirebaseDatabase.instance.ref();
-    late String text;
     bool isActiveButton = true;
   // late List<Message> message;
   //create data
@@ -59,9 +58,9 @@ class MessageScreenState extends State<MessageScreen>{
   //   dbRef.update(data);
   // }
   // delete data
-  void deleteData(){
-    dbRef.remove();
-  }
+  // void deleteData(){
+  //   dbRef.child("-Ms_0cdcEORJG_-0_nmp").remove();
+  // }
 
   void dipose(){
     super.dispose();
@@ -75,6 +74,7 @@ class MessageScreenState extends State<MessageScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
      body: Column(
        mainAxisAlignment: MainAxisAlignment.end,
        crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,15 +88,26 @@ class MessageScreenState extends State<MessageScreen>{
            return Padding(padding: EdgeInsets.only(right: 60,bottom: 10,left: 10),
              child:Column(
                children:[
-           Card(
+                 Container(
+                   height:50,
+                   child:  GestureDetector(
+                     onLongPress: (){
+                         dbRef.child(snapshot.key!).remove();
+                     },
+          child: Card(
              shadowColor: Colors.grey,
              shape: RoundedRectangleBorder(
                borderRadius: BorderRadius.circular(20)
              ),
-             child:Align(
+
+            child: Align(
                alignment: Alignment.bottomLeft,
-             child:Text(message.text)
+             child:Padding(padding: EdgeInsets.all(10),
+             child:Text(message.text,style: TextStyle(fontSize: 16,fontStyle: FontStyle.italic,),)
              ),),
+             ),
+          ),
+                 ),
                  Text(message.date.toString()),
              ]
              )
@@ -141,7 +152,7 @@ class MessageScreenState extends State<MessageScreen>{
          ),
            IconButton(
                onPressed: () {
-             deleteData();
+                 // deleteData();
            }, icon: Icon(CupertinoIcons.delete) )
          ],
        ),
